@@ -485,8 +485,9 @@ stuck messages from the queue to recover credits.
 
 **What is the difference between Test mode and Live mode?**
 
-Test mode (`KWTSMS_TEST_MODE=1`) queues the message but never delivers it. No
-SMS is sent, no credits consumed. Use this during development. Set to `0` before
+Test mode (`KWTSMS_TEST_MODE=1`) queues the message but never delivers it. Its
+credits are held until you delete it from the Sending Queue in your kwtsms.com
+account. Use this during development. Set to `0` before
 going live.
 
 **Why should I not use `KWT-SMS` as my Sender ID in production?**

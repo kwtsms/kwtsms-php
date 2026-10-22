@@ -75,10 +75,12 @@ function send_safe(KwtSMS $sms, string $phone, string $message): void
             echo "   ℹ️  Sender ID not found or banned. Check sender ID registration.\n";
             break;
 
-        // ── Rate limit: wait 15 seconds, then retry once ─────────────────────
+        // 2026-10-22 15:38 +03: ERR028 wait was a hardcoded 15 s. Duplicate SMS protection is opt-in
+        // per account and its window is set per account (10 s default), so match $dupWindow to yours.
         case 'ERR028':
-            echo "   ℹ️  Rate limited. Waiting 15 seconds before retry...\n";
-            sleep(15);
+            $dupWindow = 10;
+            echo "   ℹ️  Sent to the same number too soon. Waiting {$dupWindow} seconds before retry...\n";
+            sleep($dupWindow);
             $retry = $sms->send($phone, $message);
             echo "   Retry result: {$retry['result']}\n";
             break;

@@ -98,9 +98,10 @@ class ApiErrors
             'description' => 'HTML tags are not allowed in the message.',
             'action' => 'Remove any HTML content and try again.',
         ],
+        // 2026-10-22 15:38 +03: ERR028 text corrected, duplicate SMS protection is opt-in per account with a per-account window (10 s default), not a fixed 15 s.
         'ERR028' => [
-            'description' => 'You must wait at least 15 seconds before sending to the same number again. No credits were consumed.',
-            'action' => 'Wait 15 seconds before sending.',
+            'description' => 'Sent to the same number too soon.',
+            'action' => "Wait for the account's duplicate SMS window (10 seconds by default) before resending.",
         ],
         'ERR029' => [
             'description' => 'Message ID does not exist or is incorrect.',

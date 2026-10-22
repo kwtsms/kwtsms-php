@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Docs
+- Test mode: test messages are queued but not delivered. Their credits are held until you delete them from the Sending Queue in your kwtsms.com account (previously documented as "no credits consumed").
+- ERR028 description and action no longer state a fixed 15-second wait. Duplicate SMS protection is opt-in per account and its window is set per account (10 seconds by default). The error-handling example now waits 10 seconds instead of 15.
+
 ---
 
 ## [1.7.0] 2026-03-18

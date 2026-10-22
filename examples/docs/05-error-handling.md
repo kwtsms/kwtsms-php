@@ -23,9 +23,9 @@ kwtSMS API Error
   │     Log the number/content. Do NOT retry with same input.
   │     Fix the input, then retry.
   │
-  ├─ Rate limit  (ERR028)
-  │     Wait 15 seconds. Retry once.
-  │     Entire request is rejected if any number hits the 15s gap.
+  ├─ Duplicate SMS protection  (ERR028, opt-in per account)
+  │     Wait for the account's window (10 s by default). Retry once.
+  │     Entire request is rejected if any number got the same message within the window.
   │
   ├─ Queue full  (ERR013)
   │     Wait 30 seconds. Retry with exponential backoff.
@@ -61,18 +61,21 @@ if ($result['result'] !== 'OK') {
 Use `action` directly in admin dashboards or logs. No need to maintain your own
 error-to-action mapping.
 
-### Handling ERR028 (15-second minimum)
+### Handling ERR028 (duplicate SMS protection)
 
 ```php
 if ($result['code'] === 'ERR028') {
-    sleep(15);
+    sleep(10); // your account's window, 10 seconds by default
     $retry = $sms->send($phone, $message);
     // Do not retry more than once
 }
 ```
 
-ERR028 rejects the **entire request** if any number was sent to within the last
-15 seconds. For OTP, always send to one number per request.
+ERR028 is opt-in per account (Duplicate SMS protection in the account's API
+settings). When it is on and any number in the request was sent the same message
+within the account's window (10 seconds by default, configurable per account),
+the **entire request** is rejected with ERR028 and nothing is charged. For OTP,
+always send to one number per request.
 
 ### Inspect all mapped error codes
 

@@ -74,7 +74,7 @@ still deducted.
 | ERR025 | send | Invalid number format | Strip non-digits, remove + or 00 prefix |
 | ERR026 | send | No route for country | Contact kwtSMS to activate country |
 | ERR027 | send | HTML tags in message | Strip HTML before sending |
-| ERR028 | send | 15-second gap required between sends to same number | Wait 15s, retry once |
+| ERR028 | send | Sent to the same number too soon. | Duplicate SMS protection is opt-in per account; wait for the account's window (10 seconds by default), retry once |
 | ERR029 | status | Message ID not found | Check msg-id value |
 | ERR030 | status | Message stuck in queue | Delete from queue to recover credits |
 | ERR031 | send | Bad language detected | Review message content |
