@@ -68,4 +68,4 @@ Expected output: `Connected! Balance: X credits`
 
 ## CLI
 
-The CLI tool has moved to a dedicated package: **[kwtsms-cli](https://github.com/boxlinknet/kwtsms-cli)**
+The CLI tool has moved to a dedicated package: **[kwtsms-cli](https://github.com/kwtsms/kwtsms-cli)**

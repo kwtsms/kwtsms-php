@@ -12,7 +12,7 @@ Only the latest release receives security fixes. Update to the latest version be
 
 **Do not open a public GitHub issue for security vulnerabilities.**
 
-Report privately via GitHub: go to the [Security tab](https://github.com/boxlinknet/kwtsms-php/security/advisories/new) and open a private advisory. Include:
+Report privately via GitHub: go to the [Security tab](https://github.com/kwtsms/kwtsms-php/security/advisories/new) and open a private advisory. Include:
 
 - Description of the vulnerability
 - Steps to reproduce

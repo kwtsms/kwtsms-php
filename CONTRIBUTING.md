@@ -28,8 +28,8 @@ levels are welcome.
 
 ## Getting Started
 
-1. **Search first:** check [existing issues](https://github.com/boxlinknet/kwtsms-php/issues)
-   and [open PRs](https://github.com/boxlinknet/kwtsms-php/pulls) before opening a new one.
+1. **Search first:** check [existing issues](https://github.com/kwtsms/kwtsms-php/issues)
+   and [open PRs](https://github.com/kwtsms/kwtsms-php/pulls) before opening a new one.
 2. **Small PRs win:** focused, single-purpose pull requests are reviewed faster.
 3. **Tests are required:** all changes to `src/` must be accompanied by tests.
 
@@ -37,7 +37,7 @@ levels are welcome.
 
 ## Reporting Bugs
 
-Open an issue at [github.com/boxlinknet/kwtsms-php/issues/new](https://github.com/boxlinknet/kwtsms-php/issues/new) and include:
+Open an issue at [github.com/kwtsms/kwtsms-php/issues/new](https://github.com/kwtsms/kwtsms-php/issues/new) and include:
 
 - **PHP version** (`php -v`)
 - **Library version** (`composer show kwtsms/kwtsms`)
@@ -51,7 +51,7 @@ Open an issue at [github.com/boxlinknet/kwtsms-php/issues/new](https://github.co
 
 ## Suggesting Features
 
-Open a [GitHub Discussion](https://github.com/boxlinknet/kwtsms-php/discussions)
+Open a [GitHub Discussion](https://github.com/kwtsms/kwtsms-php/discussions)
 or an issue tagged `enhancement`. Describe the problem, your proposed solution,
 and any alternatives considered.
 
@@ -202,7 +202,7 @@ test(client): add mocked bulk-send and ERR009 emoji-only tests
 git push origin fix/your-branch-name
 ```
 
-Then open a PR at [github.com/boxlinknet/kwtsms-php/pulls](https://github.com/boxlinknet/kwtsms-php/pulls).
+Then open a PR at [github.com/kwtsms/kwtsms-php/pulls](https://github.com/kwtsms/kwtsms-php/pulls).
 
 **PR checklist:**
 
@@ -232,6 +232,6 @@ Maintainers handle version tagging and Packagist releases.
 
 ## Questions?
 
-Open a [GitHub Discussion](https://github.com/boxlinknet/kwtsms-php/discussions)
+Open a [GitHub Discussion](https://github.com/kwtsms/kwtsms-php/discussions)
 for general questions. For kwtSMS API questions (not library bugs), contact
 [kwtSMS support](https://www.kwtsms.com/support.html).
