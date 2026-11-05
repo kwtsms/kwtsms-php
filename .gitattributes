@@ -1,0 +1,9 @@
+# 2026-11-06 01:03 +03: keep dev and CI files out of the Packagist dist zip (and out of vendor copies in WHMCS and OpenCart), ci-dryrun-all
+/.github export-ignore
+/tests export-ignore
+/examples/docs export-ignore
+/phpunit.xml export-ignore
+/.php-cs-fixer.dist.php export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore
+/.env.example export-ignore
