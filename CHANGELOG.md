@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Changed
+- Package author and license holder are now kwtSMS.
 - ERR006 and ERR025 action text, the README, examples and docs use the placeholder `965XXXXXXXX` instead of a sample mobile number; tests read the phone number from `KWTSMS_TEST_NUMBER` and skip the tests that need it when it is unset.
 
 ### Docs
@@ -190,7 +191,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
-[Unreleased]: https://github.com/boxlinknet/kwtsms-php/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/kwtsms/kwtsms-php/compare/v1.7.0...HEAD
 [1.7.0]: https://github.com/boxlinknet/kwtsms-php/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/boxlinknet/kwtsms-php/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/boxlinknet/kwtsms-php/compare/v1.4.0...v1.5.0
