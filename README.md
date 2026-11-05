@@ -450,7 +450,7 @@ personal or customer data. Pass your own product token as the sixth constructor 
 
 ```php
 $sms = new KwtSMS($user, $pass, 'MY-SENDER', false, 'kwtsms.log', 'my-shop/2.1.0');
-// User-Agent: my-shop/2.1.0 kwtsms-php/1.7.1
+// User-Agent: my-shop/2.1.0 kwtsms-php/1.8.0
 ```
 
 ---

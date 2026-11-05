@@ -30,7 +30,7 @@ class KwtSMS
      * 2026-11-05 14:10 +03: added so kwtSMS can count accounts per integration (int-measure-signups, #939).
      * @var string
      */
-    public const VERSION = '1.7.1';
+    public const VERSION = '1.8.0';
 
     /** @var string User-Agent sent on every API call (2026-11-05 14:10 +03, #939) */
     private $user_agent;
