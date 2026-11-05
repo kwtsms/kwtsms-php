@@ -182,11 +182,11 @@ Runs the full send → wrong code → correct code flow using SQLite and
 ## Send OTP: Detailed Flow
 
 ```
-POST /otp/send  {"phone": "+965 9876 5432", "captcha_token": "xxxx"}
+POST /otp/send  {"phone": "+965 XXXX XXXX", "captcha_token": "xxxx"}
   │
   ├─ 1. VALIDATE & NORMALIZE PHONE (local, no API call)
-  │       PhoneUtils::validate_phone_input("+965 9876 5432")
-  │       → [true, null, "96598765432"]
+  │       PhoneUtils::validate_phone_input("+965 XXXX XXXX")
+  │       → [true, null, "965XXXXXXXX"]
   │       Reject if: empty, email, no digits, <7 digits, >15 digits
   │
   ├─ 2. VERIFY CAPTCHA
@@ -195,7 +195,7 @@ POST /otp/send  {"phone": "+965 9876 5432", "captcha_token": "xxxx"}
   │       (Bot check runs BEFORE rate limit to avoid leaking state)
   │
   ├─ 3. PER-PHONE RATE LIMIT
-  │       Count sends from "96598765432" in last 10 minutes
+  │       Count sends from "965XXXXXXXX" in last 10 minutes
   │       ≥3 → 422 "Too many codes sent. Wait 10 minutes."
   │
   ├─ 4. PER-IP RATE LIMIT
@@ -207,7 +207,7 @@ POST /otp/send  {"phone": "+965 9876 5432", "captcha_token": "xxxx"}
   │       random_int(0, 999999) → "042819"  (zero-padded, 6 digits)
   │
   ├─ 6. HASH OTP
-  │       hash_hmac('sha256', "96598765432:042819", APP_SECRET)
+  │       hash_hmac('sha256', "965XXXXXXXX:042819", APP_SECRET)
   │       ONLY the hash is stored — DB dump reveals nothing
   │
   ├─ 7. SEND SMS
@@ -219,7 +219,7 @@ POST /otp/send  {"phone": "+965 9876 5432", "captcha_token": "xxxx"}
   │       Old codes replaced — one active code per phone
   │
   ├─ 9. RECORD RATE-LIMIT EVENTS
-  │       recordSend("phone:96598765432", 600)
+  │       recordSend("phone:965XXXXXXXX", 600)
   │       recordSend("ip:x.x.x.x",       3600)
   │
   └─ 10. RESPOND
@@ -232,10 +232,10 @@ POST /otp/send  {"phone": "+965 9876 5432", "captcha_token": "xxxx"}
 ## Verify OTP: Detailed Flow
 
 ```
-POST /otp/verify  {"phone": "96598765432", "code": "042819"}
+POST /otp/verify  {"phone": "965XXXXXXXX", "code": "042819"}
   │
   ├─ 1. NORMALIZE PHONE
-  │       validate_phone_input → "96598765432"
+  │       validate_phone_input → "965XXXXXXXX"
   │
   ├─ 2. FETCH ACTIVE RECORD
   │       SELECT WHERE phone=... AND used=0
@@ -264,7 +264,7 @@ POST /otp/verify  {"phone": "96598765432", "code": "042819"}
   │       UPDATE SET used=1  — prevents replay
   │
   └─ 9. RESPOND
-          200 {success: true, phone: "96598765432"}
+          200 {success: true, phone: "965XXXXXXXX"}
           Store normalized phone in session/DB as the verified number.
 ```
 

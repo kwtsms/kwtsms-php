@@ -9,6 +9,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+- ERR006 and ERR025 action text, the README, examples and docs use the placeholder `965XXXXXXXX` instead of a sample mobile number; tests read the phone number from `KWTSMS_TEST_NUMBER` and skip the tests that need it when it is unset.
+
 ### Docs
 - Test mode: test messages are queued but not delivered. Their credits are held until you delete them from the Sending Queue in your kwtsms.com account (previously documented as "no credits consumed").
 - ERR028 description and action no longer state a fixed 15-second wait. Duplicate SMS protection is opt-in per account and its window is set per account (10 seconds by default). The error-handling example now waits 10 seconds instead of 15.

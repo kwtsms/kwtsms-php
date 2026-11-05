@@ -78,7 +78,7 @@ Do not manually chunk before calling `send()`. The library handles it.
 Valid numbers are still sent even when some inputs fail:
 
 ```php
-$result = $sms->send(['96598765432', 'admin@test.com', '123'], $message);
+$result = $sms->send(['965XXXXXXXX', 'admin@test.com', '123'], $message);
 // $result['result']  'OK' (valid numbers were sent)
 // $result['invalid'] [
 //     ['number' => 'admin@test.com', 'error' => 'is an email address...'],

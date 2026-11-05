@@ -26,15 +26,15 @@ use KwtSMS\PhoneUtils;
 echo "═══ LOCAL VALIDATION (no API call) ═══\n\n";
 
 $numbers_to_test = [
-    '+965 9876 5432',       // Valid Kuwait
+    '+965 XXXX XXXX',       // Valid Kuwait
     '0096512345678',        // Valid Kuwait (00 prefix)
-    '٩٦٥٩٨٧٦٥٤٣٢',         // Arabic digits — normalized automatically
+    '٩٦٥XXXXXXXX',         // Arabic digits: normalized automatically
     'admin@example.com',    // Email — rejected
     '123',                  // Too short — rejected
     '1234567890123456',     // Too long (16 digits) — rejected
     'call me',              // No digits — rejected
     '+1 800 555 0199',      // Valid US
-    '  96598765432  ',      // Extra whitespace — trimmed and valid
+    '  965XXXXXXXX  ',      // Extra whitespace: trimmed and valid
 ];
 
 foreach ($numbers_to_test as $number) {
@@ -55,7 +55,7 @@ echo "\n═══ BULK LOCAL VALIDATION ═══\n\n";
 $sms = KwtSMS::from_env();
 
 $bulk_list = [
-    '96598765432',
+    '965XXXXXXXX',
     '96512345678',
     'not-a-number',
     '+44 20 7946 0958', // UK
@@ -87,11 +87,11 @@ foreach ($report['raw'] as $entry) {
 echo "\n═══ NORMALIZATION EXAMPLES ═══\n\n";
 
 $raw_inputs = [
-    '+965 9876-5432' => '96598765432',
-    '0096598765432' => '96598765432',
-    '٩٦٥٩٨٧٦٥٤٣٢' => '96598765432',
-    '۹۶۵۹۸۷۶۵۴۳۲' => '96598765432',
-    '(965) 9876 5432' => '96598765432',
+    '+965 XXXX-XXXX' => '965XXXXXXXX',
+    '00965XXXXXXXX' => '965XXXXXXXX',
+    '٩٦٥XXXXXXXX' => '965XXXXXXXX',
+    '۹۶۵XXXXXXXX' => '965XXXXXXXX',
+    '(965) XXXX XXXX' => '965XXXXXXXX',
 ];
 
 foreach ($raw_inputs as $raw => $expected) {

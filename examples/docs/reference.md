@@ -8,16 +8,16 @@ Shared reference tables for all examples.
 
 ```
 International format (correct):
-  96598765432      ✅
+  965XXXXXXXX      ✅
 
 Auto-normalized by the library:
-  +96598765432     ✅  strip +
-  0096598765432    ✅  strip leading 00
-  965 9876 5432    ✅  strip spaces
-  965-9876-5432    ✅  strip dashes
-  (965) 9876.5432  ✅  strip parentheses and dots
-  ٩٦٥٩٨٧٦٥٤٣٢     ✅  Arabic-Indic digits → Latin
-  ۹۶۵۹۸۷۶۵۴۳۲     ✅  Extended Arabic-Indic → Latin
+  +965XXXXXXXX     ✅  strip +
+  00965XXXXXXXX    ✅  strip leading 00
+  965 XXXX XXXX    ✅  strip spaces
+  965-XXXX-XXXX    ✅  strip dashes
+  (965) XXXX.XXXX  ✅  strip parentheses and dots
+  ٩٦٥XXXXXXXX     ✅  Arabic-Indic digits → Latin
+  ۹۶۵XXXXXXXX     ✅  Extended Arabic-Indic → Latin
 
 Rejected:
   admin@example.com  ❌  email address

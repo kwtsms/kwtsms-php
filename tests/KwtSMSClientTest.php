@@ -37,8 +37,14 @@ class TrackingMockKwtSMS extends KwtSMS
     }
 }
 
+// 2026-11-05 08:39 +03: sample numbers removed; tests that pass a number through validate()
+// read KWTSMS_TEST_NUMBER via the TestNumber trait (skip when unset), pass-through fields and
+// early-return tests use the placeholder, bulk tests keep generated numbers (post() mocked,
+// never the network), int-testnumber.
 class KwtSMSClientTest extends TestCase
 {
+    use TestNumber;
+
     /** @var TrackingMockKwtSMS */
     private $client;
 
@@ -54,7 +60,7 @@ class KwtSMSClientTest extends TestCase
 
     public function testValidateAllValid(): void
     {
-        $result = $this->client->validate(['96598765432', '96598765433']);
+        $result = $this->client->validate([$this->kwtTestNumber(), $this->kwtOtherTestNumber()]);
 
         $this->assertSame(2, $result['ok']);
         $this->assertSame(0, $result['er']);
@@ -77,7 +83,7 @@ class KwtSMSClientTest extends TestCase
 
     public function testValidateMixed(): void
     {
-        $result = $this->client->validate(['96598765432', 'bad@email.com', '712345678']);
+        $result = $this->client->validate([$this->kwtTestNumber(), 'bad@email.com', '712345678']);
 
         $this->assertSame(2, $result['ok']);
         $this->assertSame(1, $result['er']);
@@ -87,7 +93,7 @@ class KwtSMSClientTest extends TestCase
 
     public function testValidateCommaStringInput(): void
     {
-        $result = $this->client->validate('96598765432,96598765433');
+        $result = $this->client->validate($this->kwtTestNumber() . ',' . $this->kwtOtherTestNumber());
 
         $this->assertSame(2, $result['ok']);
         $this->assertSame(0, $result['er']);
@@ -95,7 +101,7 @@ class KwtSMSClientTest extends TestCase
 
     public function testValidateRawResultsShape(): void
     {
-        $result = $this->client->validate('96598765432');
+        $result = $this->client->validate($this->kwtTestNumber());
 
         $this->assertArrayHasKey('raw', $result);
         $this->assertCount(1, $result['raw']);
@@ -120,7 +126,7 @@ class KwtSMSClientTest extends TestCase
 
     public function testSendEmptyMessageReturnsErr009(): void
     {
-        $result = $this->client->send('96598765432', '');
+        $result = $this->client->send($this->kwtTestNumber(), '');
 
         $this->assertSame('ERROR', $result['result']);
         $this->assertSame('ERR009', $result['code']);
@@ -132,7 +138,7 @@ class KwtSMSClientTest extends TestCase
     {
         // Emoji-only message becomes empty after clean_message() — ERR009 fires locally,
         // no API call made, and description explains WHY it is empty.
-        $result = $this->client->send('96598765432', '😀🔥');
+        $result = $this->client->send($this->kwtTestNumber(), '😀🔥');
 
         $this->assertSame('ERROR', $result['result']);
         $this->assertSame('ERR009', $result['code']);
@@ -155,7 +161,7 @@ class KwtSMSClientTest extends TestCase
 
     public function testSendHtmlOnlyMessageReturnsErr009(): void
     {
-        $result = $this->client->send('96598765432', '<b></b>');
+        $result = $this->client->send($this->kwtTestNumber(), '<b></b>');
 
         $this->assertSame('ERROR', $result['result']);
         $this->assertSame('ERR009', $result['code']);
@@ -168,7 +174,7 @@ class KwtSMSClientTest extends TestCase
             ['result' => 'OK', 'msg-id' => 'MSG001', 'points-charged' => 1.0, 'balance-after' => 99.0],
         ];
 
-        $result = $this->client->send(['96598765432', 'invalid@email.com'], 'Hello');
+        $result = $this->client->send([$this->kwtTestNumber(), 'invalid@email.com'], 'Hello');
 
         $this->assertSame('OK', $result['result']);
         $this->assertArrayHasKey('invalid', $result);
@@ -182,7 +188,7 @@ class KwtSMSClientTest extends TestCase
             ['result' => 'OK', 'msg-id' => 'MSG001'],
         ];
 
-        $result = $this->client->send('96598765432', 'Hello');
+        $result = $this->client->send($this->kwtTestNumber(), 'Hello');
 
         $this->assertSame('OK', $result['result']);
         $this->assertArrayNotHasKey('invalid', $result);
@@ -658,8 +664,9 @@ class KwtSMSClientTest extends TestCase
         ];
 
         // Three entries: two are the same normalized number
+        $n = $this->kwtTestNumber();
         $result = $this->client->send(
-            ['96598765432', '96598765432', '96598765433'],
+            [$n, $n, $this->kwtOtherTestNumber()],
             'Dedup test'
         );
 
@@ -679,9 +686,9 @@ class KwtSMSClientTest extends TestCase
             ['result' => 'OK', 'msg-id' => 'MSG001'],
         ];
 
-        // +965 9876-5432 and 96598765432 normalize to the same number
+        // "+965 XXXX-XXXX" and "965XXXXXXXX" normalize to the same number
         $result = $this->client->send(
-            ['+965 9876-5432', '96598765432'],
+            [$this->kwtTestNumberVariant('plus-space-dash'), $this->kwtTestNumber()],
             'Normalization dedup test'
         );
 
@@ -697,7 +704,8 @@ class KwtSMSClientTest extends TestCase
     public function testValidateStillCountsDuplicatesForAuditing(): void
     {
         // validate() should NOT deduplicate - it reports every input entry
-        $result = $this->client->validate(['96598765432', '96598765432']);
+        $n = $this->kwtTestNumber();
+        $result = $this->client->validate([$n, $n]);
 
         $this->assertSame(2, $result['ok']);  // both entries are valid
         $this->assertCount(2, $result['_valid_list']);
@@ -762,7 +770,7 @@ class KwtSMSClientTest extends TestCase
     public function testDlrReturnsOkWithReport(): void
     {
         $this->client->mockResponses = [
-            ['result' => 'OK', 'report' => [['Number' => '96598765432', 'Status' => 'Received by recipient']]],
+            ['result' => 'OK', 'report' => [['Number' => self::$testNumberPlaceholder, 'Status' => 'Received by recipient']]],
         ];
 
         $result = $this->client->dlr('abc123');
@@ -770,7 +778,7 @@ class KwtSMSClientTest extends TestCase
         $this->assertSame('OK', $result['result']);
         $this->assertArrayHasKey('report', $result);
         $this->assertCount(1, $result['report']);
-        $this->assertSame('96598765432', $result['report'][0]['Number']);
+        $this->assertSame(self::$testNumberPlaceholder, $result['report'][0]['Number']);
         $this->assertSame('Received by recipient', $result['report'][0]['Status']);
     }
 
@@ -974,7 +982,7 @@ class KwtSMSClientTest extends TestCase
     public function testSendReturnsEarlyOnEmptyUsername(): void
     {
         $client = new TrackingMockKwtSMS('', 'somepass', 'TEST', true, '');
-        $result = $client->send('96598765432', 'Hello');
+        $result = $client->send(self::$testNumberPlaceholder, 'Hello');
 
         $this->assertSame('ERROR', $result['result']);
         $this->assertSame('ERR003', $result['code']);
@@ -985,7 +993,7 @@ class KwtSMSClientTest extends TestCase
     public function testSendReturnsEarlyOnEmptyPassword(): void
     {
         $client = new TrackingMockKwtSMS('someuser', '', 'TEST', true, '');
-        $result = $client->send('96598765432', 'Hello');
+        $result = $client->send(self::$testNumberPlaceholder, 'Hello');
 
         $this->assertSame('ERROR', $result['result']);
         $this->assertSame('ERR003', $result['code']);
@@ -996,7 +1004,7 @@ class KwtSMSClientTest extends TestCase
     public function testSendReturnsEarlyOnBothEmpty(): void
     {
         $client = new TrackingMockKwtSMS('', '', 'TEST', true, '');
-        $result = $client->send('96598765432', 'Hello');
+        $result = $client->send(self::$testNumberPlaceholder, 'Hello');
 
         $this->assertSame('ERROR', $result['result']);
         $this->assertSame('ERR003', $result['code']);

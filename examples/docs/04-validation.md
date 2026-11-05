@@ -57,7 +57,7 @@ use KwtSMS\PhoneUtils;
 if (!$valid) {
     echo $error;       // "'+965 abc' is not a valid phone number, no digits found"
 } else {
-    echo $normalized;  // "96598765432"
+    echo $normalized;  // "965XXXXXXXX"
 }
 ```
 
@@ -71,17 +71,17 @@ Use local validation first on every form submission:
 **Normalization rules:**
 
 ```
-"+965 9876-5432"    -> "96598765432"   strip +, spaces, dashes
-"0096598765432"     -> "96598765432"   strip leading 00
+"+965 XXXX-XXXX"    -> "965XXXXXXXX"   strip +, spaces, dashes
+"00965XXXXXXXX"     -> "965XXXXXXXX"   strip leading 00
 "966 055 123 4567"  -> "966551234567"  strip local trunk digit 0 after country code
-"90765432"          -> "96598765432"   Arabic-Indic digits to Latin (example only)
-"(965) 9876.5432"   -> "96598765432"   strip parentheses and dots
+"٩٦٥XXXXXXXX"       -> "965XXXXXXXX"   Arabic-Indic digits to Latin (example only)
+"(965) XXXX.XXXX"   -> "965XXXXXXXX"   strip parentheses and dots
 ```
 
 **Country-specific validation examples:**
 
 ```
-"96596123456"   -> valid   (Kuwait: 8 local digits, starts with 6)
+"965XXXXXXXX"   -> valid   (Kuwait: 8 local digits, starts with 4, 5, 6 or 9)
 "96510000000"   -> invalid (Kuwait mobile numbers cannot start with 1)
 "966512345678"  -> valid   (Saudi Arabia: 9 local digits, starts with 5)
 "966412345678"  -> invalid (Saudi Arabia mobile numbers cannot start with 4)

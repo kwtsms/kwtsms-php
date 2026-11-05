@@ -80,8 +80,8 @@
  *   php examples/09-otp-production.php
  *
  * HTTP integration:
- *   POST /otp/send   — body: {"phone":"96598765432","captcha_token":"..."}
- *   POST /otp/verify — body: {"phone":"96598765432","code":"123456"}
+ *   POST /otp/send   body:{"phone":"965XXXXXXXX","captcha_token":"..."}
+ *   POST /otp/verify body:{"phone":"965XXXXXXXX","code":"123456"}
  */
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -149,7 +149,7 @@ interface OtpStorageAdapter
     /**
      * Count send events within the rate-limit window.
      *
-     * @param string $rlKey         e.g. "phone:96598765432" or "ip:192.168.1.1"
+     * @param string $rlKey         e.g. "phone:965XXXXXXXX" or "ip:192.168.1.1"
      * @param int    $windowSeconds Rolling window size in seconds
      */
     public function countRecentSends(string $rlKey, int $windowSeconds): int;
@@ -157,7 +157,7 @@ interface OtpStorageAdapter
     /**
      * Record a send event for rate-limiting purposes.
      *
-     * @param string $rlKey         e.g. "phone:96598765432" or "ip:192.168.1.1"
+     * @param string $rlKey         e.g. "phone:965XXXXXXXX" or "ip:192.168.1.1"
      * @param int    $windowSeconds Events older than this are pruned
      */
     public function recordSend(string $rlKey, int $windowSeconds): void;
@@ -717,7 +717,7 @@ class OtpService
         if (!$valid || $phone === null) {
             return [
                 'success' => false,
-                'message' => 'Please enter a valid phone number in international format (e.g. 96598765432).',
+                'message' => 'Please enter a valid phone number in international format (e.g. 965XXXXXXXX).',
             ];
         }
 
@@ -929,7 +929,7 @@ class OtpService
 
 /**
  * POST /otp/send
- * Body:     {"phone":"96598765432","captcha_token":"<token>"}
+ * Body:     {"phone":"965XXXXXXXX","captcha_token":"<token>"}
  * Success:  {"success":true,"message":"...","expires_in":300}
  * Failure:  {"success":false,"message":"..."}
  */
@@ -978,8 +978,8 @@ function handleSendOtp(OtpService $service): void
 
 /**
  * POST /otp/verify
- * Body:     {"phone":"96598765432","code":"123456"}
- * Success:  {"success":true,"message":"...","phone":"96598765432"}
+ * Body:     {"phone":"965XXXXXXXX","code":"123456"}
+ * Success:  {"success":true,"message":"...","phone":"965XXXXXXXX"}
  * Failure:  {"success":false,"message":"..."}
  */
 function handleVerifyOtp(OtpService $service): void
@@ -1122,7 +1122,7 @@ Replace YOUR_CF_SITE_KEY with the sitekey from dash.cloudflare.com → Turnstile
 <!-- OTP request form -->
 <form id="otp-form">
   <input type="tel" id="phone" name="phone"
-         placeholder="+965 9876 5432" required autocomplete="tel" />
+         placeholder="+965 XXXX XXXX" required autocomplete="tel" />
   <div class="cf-turnstile" data-sitekey="YOUR_CF_SITE_KEY"></div>
   <button type="submit">Send Verification Code</button>
   <p id="otp-error" style="color:red;display:none"></p>
@@ -1164,7 +1164,7 @@ Replace YOUR_HCAPTCHA_SITE_KEY with the sitekey from dashboard.hcaptcha.com.
 <!-- OTP request form -->
 <form id="otp-form">
   <input type="tel" id="phone" name="phone"
-         placeholder="+965 9876 5432" required autocomplete="tel" />
+         placeholder="+965 XXXX XXXX" required autocomplete="tel" />
   <div class="h-captcha" data-sitekey="YOUR_HCAPTCHA_SITE_KEY"></div>
   <button type="submit">Send Verification Code</button>
   <p id="otp-error" style="color:red;display:none"></p>
@@ -1318,7 +1318,7 @@ try {
     exit(1);
 }
 
-$phone = '96598765432';
+$phone = '965XXXXXXXX';
 
 // ── Send OTP ──────────────────────────────────────────────────────────────────
 echo "Phone:        {$phone}\n";

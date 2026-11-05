@@ -48,7 +48,7 @@ use KwtSMS\KwtSMS;
 
 $sms = KwtSMS::from_env();
 
-$result = $sms->send('96598765432', 'Your OTP for MYAPP is: 123456');
+$result = $sms->send('965XXXXXXXX', 'Your OTP for MYAPP is: 123456');
 
 if ($result['result'] === 'OK') {
     echo "Sent! Cost: {$result['points-charged']} credits\n";
@@ -161,14 +161,14 @@ Send SMS to one or more recipients.
 
 ```php
 // Single number
-$result = $sms->send('96598765432', 'Hello from kwtSMS!');
+$result = $sms->send('965XXXXXXXX', 'Hello from kwtSMS!');
 
 // Per-message sender ID override
-$result = $sms->send('96598765432', 'Hello!', 'MY-BRAND');
+$result = $sms->send('965XXXXXXXX', 'Hello!', 'MY-BRAND');
 
 // Multiple numbers: array or comma-separated string
-$result = $sms->send(['96598765432', '96512345678'], 'Bulk announcement');
-$result = $sms->send('96598765432,96512345678', 'Bulk announcement');
+$result = $sms->send(['965XXXXXXXX', '96512345678'], 'Bulk announcement');
+$result = $sms->send('965XXXXXXXX,96512345678', 'Bulk announcement');
 ```
 
 **What `send()` does automatically:**
@@ -213,7 +213,7 @@ $result = $sms->send('96598765432,96512345678', 'Bulk announcement');
   "result": "ERROR",
   "code": "ERR006",
   "description": "No valid phone numbers.",
-  "action": "Make sure each number includes the country code (e.g. 96598765432)."
+  "action": "Make sure each number includes the country code (e.g. 965XXXXXXXX)."
 }
 ```
 
@@ -227,7 +227,7 @@ Always save `msg-id` (needed for status/DLR lookups) and `balance-after`
 Validate and normalize a list of phone numbers locally. No API call is made.
 
 ```php
-$report = $sms->validate(['abcd', '+965 9876 5432', '96522334455']);
+$report = $sms->validate(['abcd', '+965 XXXX XXXX', '96522334455']);
 
 echo $report['nr'];  // total submitted: 3
 echo $report['ok'];  // locally valid:   2
@@ -302,7 +302,7 @@ $result = $sms->dlr($msgId);
 if ($result['result'] === 'OK') {
     foreach ($result['report'] as $entry) {
         echo $entry['Number'] . ': ' . $entry['Status'] . "\n";
-        // e.g. "96550123456: Received by recipient"
+        // e.g. "965XXXXXXXX: Received by recipient"
     }
 }
 ```
@@ -320,10 +320,10 @@ Validate and normalize a single phone number string.
 ```php
 use KwtSMS\PhoneUtils;
 
-[$valid, $error, $normalized] = PhoneUtils::validate_phone_input('+٩٦٥ ٩٨٧٦ ٥٤٣٢');
+[$valid, $error, $normalized] = PhoneUtils::validate_phone_input('+٩٦٥ XXXX XXXX');
 // $valid      true
 // $error      null
-// $normalized "96598765432"
+// $normalized "965XXXXXXXX"
 ```
 
 Validation steps (in order):
@@ -341,8 +341,8 @@ Validation steps (in order):
 Lower-level helpers used internally by `validate_phone_input()`. Useful if you need to inspect the country code or run format checks independently.
 
 ```php
-$cc    = PhoneUtils::find_country_code('96598765432'); // "965"
-[$ok, $err] = PhoneUtils::validate_phone_format('96598765432'); // [true, null]
+$cc    = PhoneUtils::find_country_code('965XXXXXXXX'); // "965"
+[$ok, $err] = PhoneUtils::validate_phone_format('965XXXXXXXX'); // [true, null]
 [$ok, $err] = PhoneUtils::validate_phone_format('96510000000'); // [false, "Invalid Kuwait mobile number: ..."]
 ```
 
@@ -351,7 +351,7 @@ $cc    = PhoneUtils::find_country_code('96598765432'); // "965"
 Normalize without validating. Useful for bulk pre-processing.
 
 ```php
-$normalized = PhoneUtils::normalize_phone('+965 9876-5432'); // "96598765432"
+$normalized = PhoneUtils::normalize_phone('+965 XXXX-XXXX'); // "965XXXXXXXX"
 ```
 
 ### `MessageUtils::clean_message()`
@@ -385,11 +385,11 @@ The library normalizes all of these automatically:
 
 | Input | Normalized |
 |-------|-----------|
-| `+965 9876 5432` | `96598765432` |
-| `0096598765432` | `96598765432` |
-| `(965) 9876-5432` | `96598765432` |
-| `٩٦٥٩٨٧٦٥٤٣٢` (Arabic-Indic) | `96598765432` |
-| `۹۶۵۹۸۷۶۵۴۳۲` (Extended Arabic-Indic) | `96598765432` |
+| `+965 XXXX XXXX` | `965XXXXXXXX` |
+| `00965XXXXXXXX` | `965XXXXXXXX` |
+| `(965) XXXX-XXXX` | `965XXXXXXXX` |
+| `٩٦٥XXXXXXXX` (Arabic-Indic) | `965XXXXXXXX` |
+| `۹۶۵XXXXXXXX` (Extended Arabic-Indic) | `965XXXXXXXX` |
 | `966 055 123 4567` (Saudi with trunk 0) | `966551234567` |
 
 Rejected inputs: email addresses, empty strings, fewer than 7 digits, more than 15 digits, numbers that don't match their country's digit length or mobile prefix rules.

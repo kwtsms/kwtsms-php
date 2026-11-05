@@ -30,9 +30,11 @@ class ApiErrors
             'description' => 'This account is blocked.',
             'action' => 'Contact kwtSMS support.',
         ],
+        // 2026-11-05 08:39 +03: ERR006/ERR025 action text uses the placeholder 965XXXXXXXX
+        // instead of a sample mobile number (sample numbers belong to real people), int-testnumber.
         'ERR006' => [
             'description' => 'No valid phone numbers.',
-            'action' => 'Make sure each number includes the country code (e.g., 96598765432 for Kuwait, not 98765432).',
+            'action' => 'Make sure each number includes the country code (e.g., 965XXXXXXXX for Kuwait, not XXXXXXXX).',
         ],
         'ERR007' => [
             'description' => 'Too many numbers in a single request (maximum 200).',
@@ -88,7 +90,7 @@ class ApiErrors
         ],
         'ERR025' => [
             'description' => 'Invalid phone number.',
-            'action' => 'Make sure the number includes the country code (e.g., 96598765432 for Kuwait, not 98765432).',
+            'action' => 'Make sure the number includes the country code (e.g., 965XXXXXXXX for Kuwait, not XXXXXXXX).',
         ],
         'ERR026' => [
             'description' => 'This country is not activated on your account.',

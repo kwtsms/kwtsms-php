@@ -50,7 +50,7 @@ function send_otp(KwtSMS $sms, string $phone, string $app_name): array
     $code = $result['code'] ?? '';
 
     if ($code === 'ERR006' || $code === 'ERR025') {
-        $user_message = 'Please enter a valid phone number including the country code (e.g., +965 9876 5432).';
+        $user_message = 'Please enter a valid phone number including the country code (e.g., +965 XXXX XXXX).';
     } elseif ($code === 'ERR026') {
         $user_message = 'SMS delivery to this country is not currently available.';
     } elseif ($code === 'ERR028') {
@@ -74,7 +74,7 @@ function send_otp(KwtSMS $sms, string $phone, string $app_name): array
 
 $sms = KwtSMS::from_env();
 
-$phone = '96598765432'; // In real usage, this comes from user input
+$phone = '965XXXXXXXX'; // In real usage, this comes from user input
 
 echo "Sending OTP to {$phone}...\n\n";
 
