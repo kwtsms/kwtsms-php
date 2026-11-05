@@ -163,8 +163,10 @@ class KwtSMS
      */
     public static function buildUserAgent(string $app_name = ''): string
     {
-        $app = (string) preg_replace('/[\x00-\x1F\x7F]+/', '', $app_name);
-        $app = trim((string) preg_replace('/\s+/', '-', trim($app)), '-');
+        // 2026-11-05 14:23 +03: whitespace to '-' first, then keep printable ASCII only (a header must be
+        // ASCII; same rule as the other kwtSMS libraries), #939.
+        $app = (string) preg_replace('/\s+/', '-', trim($app_name));
+        $app = trim((string) preg_replace('/[^\x21-\x7E]+/', '', $app), '-');
         $app = substr($app, 0, 64);
         $lib = 'kwtsms-php/' . self::VERSION;
 
