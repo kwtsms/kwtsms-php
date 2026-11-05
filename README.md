@@ -443,6 +443,16 @@ newline-delimited JSON (NDJSON) entry:
 The password is always masked as `***`. Logging never throws; failures are silently
 ignored so they cannot crash the main application flow.
 
+### User-Agent
+
+Every API request carries the User-Agent `kwtsms-php/<version>`: the library name and version only, no
+personal or customer data. Pass your own product token as the sixth constructor argument to put it in front:
+
+```php
+$sms = new KwtSMS($user, $pass, 'MY-SENDER', false, 'kwtsms.log', 'my-shop/2.1.0');
+// User-Agent: my-shop/2.1.0 kwtsms-php/1.7.1
+```
+
 ---
 
 ## Sender ID

@@ -31,6 +31,12 @@ jobs:
           key: php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
           restore-keys: php-${{ matrix.php }}-composer-
 
+      # 2026-11-05 14:10 +03: KwtSMS::VERSION is sent in the User-Agent, so it must equal the tag (#939).
+      - name: Check KwtSMS::VERSION matches the tag
+        run: |
+          v=$(grep -oE "VERSION = '[^']+'" src/KwtSMS.php | cut -d"'" -f2)
+          [ "v$v" = "${GITHUB_REF_NAME}" ] || { echo "::error::KwtSMS::VERSION ($v) does not match tag ${GITHUB_REF_NAME}"; exit 1; }
+
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 

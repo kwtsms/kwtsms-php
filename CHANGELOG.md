@@ -9,6 +9,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+- The client sends a User-Agent `kwtsms-php/<version>` (name and version only, no personal data) so kwtSMS can see which integrations are in use. An optional `$app_name` constructor argument puts your app's token in front, e.g. `kwtsms-wordpress/3.5.2 kwtsms-php/1.7.1`. New `KwtSMS::VERSION` constant.
+
 ### Changed
 - Package author and license holder are now kwtSMS.
 - ERR006 and ERR025 action text, the README, examples and docs use the placeholder `965XXXXXXXX` instead of a sample mobile number; tests read the phone number from `KWTSMS_TEST_NUMBER` and skip the tests that need it when it is unset.

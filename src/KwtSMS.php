@@ -26,20 +26,35 @@ class KwtSMS
     private const API_BASE = 'https://www.kwtsms.com/API';
 
     /**
+     * Library version, sent in the User-Agent. The release workflow fails when it differs from the tag.
+     * 2026-11-05 14:10 +03: added so kwtSMS can count accounts per integration (int-measure-signups, #939).
+     * @var string
+     */
+    public const VERSION = '1.7.1';
+
+    /** @var string User-Agent sent on every API call (2026-11-05 14:10 +03, #939) */
+    private $user_agent;
+
+    /**
      * @param string $username
      * @param string $password
      * @param string $sender_id
      * @param bool $test_mode
      * @param string $log_file  Path for NDJSON log. Empty string disables logging.
      *                          Must not contain '..' (path traversal guard).
+     * @param string $app_name  Optional product token of the calling app or plugin, e.g. 'kwtsms-wordpress/3.5.2',
+     *                          sent before the library token in the User-Agent.
      */
     public function __construct(
         string $username,
         string $password,
         string $sender_id = 'KWT-SMS',
         bool $test_mode = false,
-        string $log_file = 'kwtsms.log'
+        string $log_file = 'kwtsms.log',
+        string $app_name = ''
     ) {
+        // 2026-11-05 14:10 +03: identify the caller to the API (name and version only, no personal data), #939.
+        $this->user_agent = self::buildUserAgent($app_name);
         // Strip embedded newlines from credentials to prevent env-injection if
         // these values are ever written back to a .env file or a log entry.
         $this->username = str_replace(["\r", "\n"], '', $username);
@@ -133,6 +148,30 @@ class KwtSMS
     }
 
     /**
+     * The User-Agent this client sends: "[app token ]kwtsms-php/<VERSION>".
+     * 2026-11-05 14:10 +03: added for per-integration counts (#939).
+     */
+    public function getUserAgent(): string
+    {
+        return $this->user_agent;
+    }
+
+    /**
+     * Build the User-Agent from an optional app token. The token is caller input, so control characters
+     * (CR/LF would split the header) are removed, whitespace becomes '-', and it is cut to 64 characters.
+     * 2026-11-05 14:10 +03: added for per-integration counts (#939).
+     */
+    public static function buildUserAgent(string $app_name = ''): string
+    {
+        $app = (string) preg_replace('/[\x00-\x1F\x7F]+/', '', $app_name);
+        $app = trim((string) preg_replace('/\s+/', '-', trim($app)), '-');
+        $app = substr($app, 0, 64);
+        $lib = 'kwtsms-php/' . self::VERSION;
+
+        return $app === '' ? $lib : $app . ' ' . $lib;
+    }
+
+    /**
      * @param string $endpoint
      * @param array<string, mixed> $payload
      * @return array<string, mixed>
@@ -164,6 +203,8 @@ class KwtSMS
             'Content-Type: application/json',
             'Accept: application/json',
         ]);
+        // 2026-11-05 14:10 +03: 'kwtsms-php/<version>', prefixed by the app token when given (#939).
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
 
         // Critical: Do NOT use CURLOPT_FAILONERROR because we *need* the 4xx/5xx body for API errors!
 

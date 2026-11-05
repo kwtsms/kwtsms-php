@@ -1010,4 +1010,27 @@ class KwtSMSClientTest extends TestCase
         $this->assertSame('ERR003', $result['code']);
         $this->assertCount(0, $client->calls, 'post() should not be called with empty credentials');
     }
+
+    // 2026-11-05 14:10 +03: User-Agent identifies the library and the calling app (#939).
+    public function testUserAgentDefaultIsLibraryToken(): void
+    {
+        $this->assertSame('kwtsms-php/' . KwtSMS::VERSION, $this->client->getUserAgent());
+        $this->assertMatchesRegularExpression('/^kwtsms-php\/[0-9][0-9A-Za-z.+-]*$/', $this->client->getUserAgent());
+    }
+
+    public function testUserAgentPrependsAppToken(): void
+    {
+        $c = new TrackingMockKwtSMS('php_username', 'php_password', 'TEST', true, '', 'kwtsms-wordpress/3.5.2');
+        $this->assertSame('kwtsms-wordpress/3.5.2 kwtsms-php/' . KwtSMS::VERSION, $c->getUserAgent());
+    }
+
+    public function testUserAgentSanitizesAppToken(): void
+    {
+        $ua = KwtSMS::buildUserAgent("my app\r\nX-Injected: 1");
+        $this->assertStringNotContainsString("\r", $ua);
+        $this->assertStringNotContainsString("\n", $ua);
+        $this->assertStringNotContainsString(' X-Injected', $ua);
+        $this->assertStringEndsWith(' kwtsms-php/' . KwtSMS::VERSION, $ua);
+        $this->assertLessThanOrEqual(64, strlen(explode(' ', KwtSMS::buildUserAgent(str_repeat('a', 200)))[0]));
+    }
 }
