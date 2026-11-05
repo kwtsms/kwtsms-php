@@ -232,10 +232,12 @@ class KwtSMS
             'error' => $error,
         ];
 
-        $jsonLine = json_encode($entry) . "\n";
-        if ($jsonLine !== false) {
+        // 2026-11-05 13:12 +03: check json_encode() before appending the newline; the old check on the
+        // concatenated string was always true, so a failed encode wrote a blank line (PHPStan 2, PR #15).
+        $json = json_encode($entry);
+        if ($json !== false) {
             // Error suppression is intentional; PRD explicitly states "Logging MUST never crash the main flow"
-            @file_put_contents($this->log_file, $jsonLine, FILE_APPEND | LOCK_EX);
+            @file_put_contents($this->log_file, $json . "\n", FILE_APPEND | LOCK_EX);
         }
     }
 
