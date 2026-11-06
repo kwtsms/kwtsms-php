@@ -59,7 +59,7 @@ silently and credits are still charged.
 1. Log in to kwtsms.com → Buy SenderID → Transactional
 2. Cost: 15 KD one-time
 3. Processing time: ~5 business days (manual telecom process)
-4. Use your brand name (3–11 alphanumeric characters, no spaces)
+4. Use your brand name (3-11 alphanumeric characters, no spaces)
 
 Use `KWT-SMS` with test mode on while waiting for approval.
 
@@ -79,7 +79,7 @@ APP_NAME=MyApp
 ### Step 3: Choose a storage driver
 
 ```ini
-# SQLite (default — zero config, dev + small apps)
+# SQLite (default: zero config, dev + small apps)
 STORAGE_DRIVER=sqlite
 SQLITE_PATH=/var/www/myapp/storage/otp.db
 
@@ -208,7 +208,7 @@ POST /otp/send  {"phone": "+965 XXXX XXXX", "captcha_token": "xxxx"}
   │
   ├─ 6. HASH OTP
   │       hash_hmac('sha256', "965XXXXXXXX:042819", APP_SECRET)
-  │       ONLY the hash is stored — DB dump reveals nothing
+  │       ONLY the hash is stored: DB dump reveals nothing
   │
   ├─ 7. SEND SMS
   │       MessageUtils::clean_message(...)  → KwtSMS::send()
@@ -216,7 +216,7 @@ POST /otp/send  {"phone": "+965 XXXX XXXX", "captcha_token": "xxxx"}
   │
   ├─ 8. PERSIST
   │       store(phone, codeHash, expiresAt, msgId, balanceAfter)
-  │       Old codes replaced — one active code per phone
+  │       Old codes replaced: one active code per phone
   │
   ├─ 9. RECORD RATE-LIMIT EVENTS
   │       recordSend("phone:965XXXXXXXX", 600)
@@ -250,7 +250,7 @@ POST /otp/verify  {"phone": "965XXXXXXXX", "code": "042819"}
   │
   ├─ 5. INCREMENT ATTEMPTS  ← BEFORE comparison (critical)
   │       UPDATE SET attempts = attempts + 1
-  │       Runs even on a correct guess — prevents timing oracle
+  │       Runs even on a correct guess: prevents timing oracle
   │
   ├─ 6. CHECK ATTEMPT LIMIT
   │       attempts > 5 → 422 "Too many attempts. Request a new code."
@@ -261,7 +261,7 @@ POST /otp/verify  {"phone": "965XXXXXXXX", "code": "042819"}
   │       No match → 422 "Incorrect code. N attempts remaining."
   │
   ├─ 8. MARK USED
-  │       UPDATE SET used=1  — prevents replay
+  │       UPDATE SET used=1 : prevents replay
   │
   └─ 9. RESPOND
           200 {success: true, phone: "965XXXXXXXX"}
@@ -319,10 +319,10 @@ sudo apt install php-redis && sudo systemctl restart php8.x-fpm
 
 ```
 Per-phone: max 3 sends per 10-minute sliding window
-  Prevents: SMS bombing — many OTPs to one victim's number
+  Prevents: SMS bombing: many OTPs to one victim's number
 
 Per-IP: max 10 sends per 60-minute sliding window
-  Prevents: Scanning attacks — cycling through numbers from one IP
+  Prevents: Scanning attacks: cycling through numbers from one IP
 
 Both stored in the same DB as OTP records.
 No separate Redis instance required if using SQLite or MySQL.

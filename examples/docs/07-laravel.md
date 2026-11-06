@@ -124,7 +124,7 @@ POST /auth/otp/verify
   ├─ Validate request (phone + otp required)
   ├─ Fetch from cache: otp_{phone}
   ├─ Compare with hash_equals() (timing-safe)
-  ├─ cache()->forget('otp_' . $phone) — invalidate after use
+  ├─ cache()->forget('otp_' . $phone): invalidate after use
   └─ Return 200 OK or 422
 ```
 

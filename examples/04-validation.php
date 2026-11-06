@@ -3,7 +3,7 @@
 /**
  * Example 04: Phone Number Validation
  * ------------------------------------
- * Validate and normalize phone numbers before sending — either locally
+ * Validate and normalize phone numbers before sending: either locally
  * (instant, no API call) or against the kwtSMS routing database (checks
  * carrier support and country activation on your account).
  *
@@ -29,10 +29,10 @@ $numbers_to_test = [
     '+965 XXXX XXXX',       // Valid Kuwait
     '0096512345678',        // Valid Kuwait (00 prefix)
     '٩٦٥XXXXXXXX',         // Arabic digits: normalized automatically
-    'admin@example.com',    // Email — rejected
-    '123',                  // Too short — rejected
-    '1234567890123456',     // Too long (16 digits) — rejected
-    'call me',              // No digits — rejected
+    'admin@example.com',    // Email: rejected
+    '123',                  // Too short: rejected
+    '1234567890123456',     // Too long (16 digits): rejected
+    'call me',              // No digits: rejected
     '+1 800 555 0199',      // Valid US
     '  965XXXXXXXX  ',      // Extra whitespace: trimmed and valid
 ];

@@ -69,7 +69,7 @@ still deducted.
 | ERR011 | send | Insufficient balance | Recharge at kwtsms.com |
 | ERR012 | send | Message too long (>7 pages) | Shorten the message |
 | ERR013 | send | Send queue full (1000 msgs) | Retry after 30s. Library handles in bulk sends automatically. |
-| ERR019–023 | dlr | Delivery report issues | See API docs |
+| ERR019-023 | dlr | Delivery report issues | See API docs |
 | ERR024 | All | IP not in whitelist | Add server IP at kwtsms.com → API → IP Lockdown |
 | ERR025 | send | Invalid number format | Strip non-digits, remove + or 00 prefix |
 | ERR026 | send | No route for country | Contact kwtSMS to activate country |

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Example 09: Production OTP Flow — Complete Reference Implementation
+ * Example 09: Production OTP Flow: Complete Reference Implementation
  * ─────────────────────────────────────────────────────────────────────
  *
  * Drop-in OTP implementation for PHP applications.
@@ -30,35 +30,35 @@
  * ║  7. Set KWTSMS_TEST_MODE=0 before going live                       ║
  * ╚══════════════════════════════════════════════════════════════════════╝
  *
- * SENDER ID — CRITICAL FOR OTP
+ * SENDER ID: CRITICAL FOR OTP
  * ─────────────────────────────
  * You MUST use a Transactional (not Promotional) SenderID for OTP.
  *   - Promotional IDs (including KWT-SMS) are filtered on DND numbers.
- *     Credits are still deducted — message just never arrives.
+ *     Credits are still deducted: message just never arrives.
  *   - Transactional IDs bypass DND (whitelisted like banks/telecoms).
  *   - KWT-SMS may also cause delivery delays and is blocked on Virgin Kuwait.
  *
  * DATABASE OPTIONS
  * ─────────────────
- * Option A — SQLite:  Zero config, file-based. Good for dev + small apps.
+ * Option A: SQLite:  Zero config, file-based. Good for dev + small apps.
  *   Requires pdo_sqlite (standard on most PHP installs).
  *
- * Option B — MySQL/MariaDB:  Standard production relational DB.
+ * Option B: MySQL/MariaDB:  Standard production relational DB.
  *   Requires pdo_mysql. Use raw PDO or your framework ORM (Eloquent, Doctrine).
- *   Note: Drizzle ORM is TypeScript/JavaScript only — not usable in PHP.
+ *   Note: Drizzle ORM is TypeScript/JavaScript only: not usable in PHP.
  *
- * Option C — Redis:  Fastest, native TTL, ideal for multi-server deployments.
+ * Option C: Redis:  Fastest, native TTL, ideal for multi-server deployments.
  *   Requires phpredis extension: sudo apt install php-redis
  *   OR Predis package: composer require predis/predis
  *
  * CAPTCHA OPTIONS
  * ────────────────
- * Option 1 — Cloudflare Turnstile (recommended):
+ * Option 1: Cloudflare Turnstile (recommended):
  *   Privacy-first, zero-friction. Free for all volumes.
  *   Setup: dash.cloudflare.com → Turnstile → Add site
  *   Add TURNSTILE_SECRET to .env
  *
- * Option 2 — hCaptcha:
+ * Option 2: hCaptcha:
  *   GDPR-compliant reCAPTCHA alternative. Free tier available.
  *   Setup: dashboard.hcaptcha.com → New Site
  *   Add HCAPTCHA_SECRET to .env
@@ -66,8 +66,8 @@
  * OTP SECURITY DESIGN
  * ────────────────────
  * - Codes stored as HMAC-SHA256(phone:code, app_secret). DB dump reveals nothing.
- * - Comparison uses hash_equals() — constant-time, timing-attack safe.
- * - Attempts incremented BEFORE comparison — prevents timing oracle.
+ * - Comparison uses hash_equals(): constant-time, timing-attack safe.
+ * - Attempts incremented BEFORE comparison: prevents timing oracle.
  * - After MAX_ATTEMPTS: code invalidated even if never guessed correctly.
  * - On success: code immediately marked used (cannot replay).
  *
@@ -94,7 +94,7 @@ use KwtSMS\MessageUtils;
 // │ SECTION 1: CONFIGURATION                                                │
 // └─────────────────────────────────────────────────────────────────────────┘
 
-const OTP_TTL_SECONDS     = 300;  // 5 minutes — standard OTP expiry
+const OTP_TTL_SECONDS     = 300;  // 5 minutes: standard OTP expiry
 const OTP_DIGITS          = 6;    // 6-digit code
 const OTP_MAX_ATTEMPTS    = 5;    // lock out after 5 wrong guesses
 const RATE_PHONE_MAX      = 3;    // max sends per phone per RATE_PHONE_WINDOW
@@ -116,7 +116,7 @@ interface OtpStorageAdapter
      * Persist a newly generated OTP.
      *
      * @param string     $phone        Normalized phone (digits only, no leading zeros)
-     * @param string     $codeHash     HMAC-SHA256 of the code — never store plaintext
+     * @param string     $codeHash     HMAC-SHA256 of the code: never store plaintext
      * @param int        $expiresAt    Unix timestamp when the code expires
      * @param string     $msgId        kwtSMS msg-id for audit trail
      * @param float|null $balanceAfter kwtSMS balance after charge
@@ -279,7 +279,7 @@ class SqliteOtpStorage implements OtpStorageAdapter
 // ── Option B: MySQL / MariaDB ─────────────────────────────────────────────────
 //
 // Standard production relational DB. Works with MySQL, MariaDB, PlanetScale.
-// Drizzle ORM is TypeScript/JavaScript only — not available in PHP.
+// Drizzle ORM is TypeScript/JavaScript only: not available in PHP.
 // For Laravel: wrap these queries in Eloquent. For Symfony: use Doctrine.
 // Configure: MYSQL_DSN, MYSQL_USER, MYSQL_PASSWORD in .env
 
@@ -300,7 +300,7 @@ class MysqlOtpStorage implements OtpStorageAdapter
 
     private function createTables(): void
     {
-        // Run once on first boot — idempotent. In production use a proper migration tool.
+        // Run once on first boot: idempotent. In production use a proper migration tool.
         $this->db->exec("
             CREATE TABLE IF NOT EXISTS otp_codes (
                 phone         VARCHAR(20)  NOT NULL,
@@ -401,11 +401,11 @@ class MysqlOtpStorage implements OtpStorageAdapter
 // Best for high-traffic or multi-server deployments.
 //
 // Requires one of:
-//   phpredis extension:  sudo apt install php-redis   (recommended — native C)
+//   phpredis extension:  sudo apt install php-redis   (recommended: native C)
 //   Predis package:      composer require predis/predis (pure PHP, no extension)
 //
 // This implementation uses phpredis. For Predis, method names differ slightly
-// (lowercase: zadd, zremrangebyscore, zcard) — see Predis docs to adapt.
+// (lowercase: zadd, zremrangebyscore, zcard): see Predis docs to adapt.
 //
 // Configure: REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB in .env
 
@@ -463,7 +463,7 @@ class RedisOtpStorage implements OtpStorageAdapter
 
     public function fetch(string $phone): ?array
     {
-        // Check "used" tombstone first — avoids deserializing the payload
+        // Check "used" tombstone first: avoids deserializing the payload
         if ($this->redis->exists($this->prefix . 'used:' . $phone)) {
             return null;
         }
@@ -644,7 +644,7 @@ class HCaptchaVerifier implements CaptchaVerifier
     }
 }
 
-// ── NullCaptchaVerifier — CLI demo and unit tests ONLY ────────────────────────
+// ── NullCaptchaVerifier: CLI demo and unit tests ONLY ────────────────────────
 // NEVER set CAPTCHA_PROVIDER=none in production.
 
 class NullCaptchaVerifier implements CaptchaVerifier
@@ -703,7 +703,7 @@ class OtpService
      *   7. Send SMS via kwtSMS
      *   8. Store the hash + msg-id + balance-after in the DB
      *   9. Record rate-limit events
-     *  10. Return success — never return the OTP code in the response
+     *  10. Return success: never return the OTP code in the response
      *
      * @return array{success: bool, message: string, expires_in?: int, msg_id?: string, retry_after?: int}
      */
@@ -711,7 +711,7 @@ class OtpService
     {
         // ── Step 1: Validate & normalize phone ────────────────────────────
         // validate_phone_input does: empty check, email detection, normalize,
-        // digit count (7–15), and returns [valid, error, normalizedPhone]
+        // digit count (7-15), and returns [valid, error, normalizedPhone]
         [$valid, , $phone] = PhoneUtils::validate_phone_input($rawPhone);
 
         if (!$valid || $phone === null) {
@@ -764,7 +764,7 @@ class OtpService
         $expiresAt = time() + OTP_TTL_SECONDS;
 
         // ── Step 7: Send SMS ──────────────────────────────────────────────
-        // clean_message() strips emojis, hidden chars, HTML — prevents queue-stuck issues
+        // clean_message() strips emojis, hidden chars, HTML: prevents queue-stuck issues
         $message = MessageUtils::clean_message(
             "Your {$this->appName} verification code is: {$otp}\n" .
             'Valid for 5 minutes. Do not share this code.'
@@ -797,7 +797,7 @@ class OtpService
         $this->storage->recordSend($ipKey, RATE_IP_WINDOW);
 
         // ── Step 10: Return success ───────────────────────────────────────
-        // The OTP code is NOT returned — it exists only in the SMS and the DB hash.
+        // The OTP code is NOT returned: it exists only in the SMS and the DB hash.
         return [
             'success'    => true,
             'message'    => 'Verification code sent. Please check your phone.',
@@ -859,7 +859,7 @@ class OtpService
         }
 
         // ── Step 6: Hash and compare (constant-time) ──────────────────────
-        // Validate format before hashing — must be exactly OTP_DIGITS decimal digits.
+        // Validate format before hashing: must be exactly OTP_DIGITS decimal digits.
         // Rejects empty strings, letters, extra whitespace, and variable-length inputs
         // that could be used to probe the hash function or bypass length checks.
         $submittedCode = trim($submittedCode);
@@ -894,7 +894,7 @@ class OtpService
         return [
             'success' => true,
             'message' => 'Phone number verified successfully.',
-            'phone'   => $phone, // Normalized — safe to store in your session/DB
+            'phone'   => $phone, // Normalized: safe to store in your session/DB
         ];
     }
 
@@ -955,7 +955,7 @@ function handleSendOtp(OtpService $service): void
         $_SERVER['REMOTE_ADDR']           ??
         '0.0.0.0'
     );
-    // X-Forwarded-For may be a comma-separated list — take the first (leftmost) IP
+    // X-Forwarded-For may be a comma-separated list: take the first (leftmost) IP
     if (strpos($clientIp, ',') !== false) {
         $clientIp = trim(explode(',', $clientIp)[0]);
     }
@@ -1016,12 +1016,12 @@ function handleVerifyOtp(OtpService $service): void
  * Wire everything together from .env / environment variables.
  *
  * Required env vars:
- *   KWTSMS_USERNAME    — kwtSMS API username
- *   KWTSMS_PASSWORD    — kwtSMS API password
- *   KWTSMS_SENDER      — Your transactional SenderID (NEVER 'KWT-SMS' for OTP)
- *   APP_SECRET         — 32+ random chars for HMAC key. Generate:
+ *   KWTSMS_USERNAME   : kwtSMS API username
+ *   KWTSMS_PASSWORD   : kwtSMS API password
+ *   KWTSMS_SENDER     : Your transactional SenderID (NEVER 'KWT-SMS' for OTP)
+ *   APP_SECRET        : 32+ random chars for HMAC key. Generate:
  *                        php -r "echo bin2hex(random_bytes(32));"
- *   APP_NAME           — Shown in the OTP message body, e.g. "MyApp"
+ *   APP_NAME          : Shown in the OTP message body, e.g. "MyApp"
  *
  * Storage driver (pick one):
  *   STORAGE_DRIVER=sqlite   SQLITE_PATH=/path/to/otp.db      (default)
@@ -1031,10 +1031,10 @@ function handleVerifyOtp(OtpService $service): void
  * Captcha provider (pick one):
  *   CAPTCHA_PROVIDER=turnstile   TURNSTILE_SECRET=...    (default)
  *   CAPTCHA_PROVIDER=hcaptcha   HCAPTCHA_SECRET=...
- *   CAPTCHA_PROVIDER=none        (local dev / CLI only — never production)
+ *   CAPTCHA_PROVIDER=none        (local dev / CLI only: never production)
  *
  * Optional:
- *   KWTSMS_TEST_MODE=1   — Queues but does not deliver (set to 0 for production)
+ *   KWTSMS_TEST_MODE=1  : Queues but does not deliver (set to 0 for production)
  */
 function buildOtpService(): OtpService
 {
@@ -1111,7 +1111,7 @@ function buildOtpService(): OtpService
 /*
 
 ════════════════════════════════════════════════════════════════════════════════
-FRONTEND SNIPPET — Cloudflare Turnstile (Option 1)
+FRONTEND SNIPPET: Cloudflare Turnstile (Option 1)
 ════════════════════════════════════════════════════════════════════════════════
 Replace YOUR_CF_SITE_KEY with the sitekey from dash.cloudflare.com → Turnstile.
 
@@ -1153,7 +1153,7 @@ document.getElementById('otp-form').addEventListener('submit', async (e) => {
 ```
 
 ════════════════════════════════════════════════════════════════════════════════
-FRONTEND SNIPPET — hCaptcha (Option 2)
+FRONTEND SNIPPET: hCaptcha (Option 2)
 ════════════════════════════════════════════════════════════════════════════════
 Replace YOUR_HCAPTCHA_SITE_KEY with the sitekey from dashboard.hcaptcha.com.
 
@@ -1195,7 +1195,7 @@ document.getElementById('otp-form').addEventListener('submit', async (e) => {
 ```
 
 ════════════════════════════════════════════════════════════════════════════════
-OTP VERIFY FORM (shared — paste after the send form)
+OTP VERIFY FORM (shared: paste after the send form)
 ════════════════════════════════════════════════════════════════════════════════
 
 ```html
@@ -1302,11 +1302,11 @@ if (php_sapi_name() !== 'cli') {
     return;
 }
 
-// CLI demo — reads KWTSMS_* and APP_SECRET from .env.
+// CLI demo: reads KWTSMS_* and APP_SECRET from .env.
 // Storage defaults to SQLite (/tmp/otp.db).
 // Captcha is bypassed automatically (CAPTCHA_PROVIDER=none forced below).
 
-putenv('CAPTCHA_PROVIDER=none'); // No browser in CLI — skip captcha verification
+putenv('CAPTCHA_PROVIDER=none'); // No browser in CLI: skip captcha verification
 putenv('APP_NAME=OTPDemo');      // Shown in the SMS body
 
 echo "\n=== kwtSMS Production OTP Demo ===\n\n";
@@ -1350,7 +1350,7 @@ $handle  = @fopen('php://stdin', 'r');
 $entered = $handle !== false ? trim((string) fgets($handle)) : '';
 
 if ($entered === '') {
-    echo "No code entered — demo ends here.\n";
+    echo "No code entered: demo ends here.\n";
     exit(0);
 }
 

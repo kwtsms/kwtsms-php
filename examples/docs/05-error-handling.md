@@ -19,7 +19,7 @@ kwtSMS API Error
   ├─ Balance  (ERR010, ERR011)
   │     Stop sending. Alert admin to top up.
   │
-  ├─ Number / content  (ERR006–009, ERR025–027)
+  ├─ Number / content  (ERR006-009, ERR025-027)
   │     Log the number/content. Do NOT retry with same input.
   │     Fix the input, then retry.
   │
@@ -117,4 +117,4 @@ function send_with_alerting(KwtSMS $sms, string $phone, string $msg): bool
 ## Full Error Code Reference
 
 See [reference.md](reference.md#error-code-reference) for the complete table of
-all error codes (ERR001–ERR033) with descriptions and recommended actions.
+all error codes (ERR001-ERR033) with descriptions and recommended actions.

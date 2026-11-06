@@ -110,7 +110,7 @@ if ($ok) {
     echo "✅ Credentials valid. Balance: {$balance} credits\n\n";
 } else {
     echo "❌ Verification failed: {$error}\n\n";
-    // In production, stop here — don't attempt sends if credentials are bad
+    // In production, stop here: don't attempt sends if credentials are bad
     exit(1);
 }
 
@@ -118,7 +118,7 @@ if ($ok) {
 
 echo "═══ SEND ERROR HANDLING ═══\n\n";
 
-// Valid number — should succeed
+// Valid number: should succeed
 echo "Test 1: Valid number\n";
 send_safe($sms, '965XXXXXXXX', 'Error handling test 1');
 

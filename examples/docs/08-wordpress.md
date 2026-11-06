@@ -86,7 +86,7 @@ The settings form follows WordPress security best practices:
 add_action('woocommerce_order_status_changed',
     function (int $order_id, string $old_status, string $new_status) {
         $sms = kwtsms_get_client();
-        if (!$sms) return; // Not configured — skip silently
+        if (!$sms) return; // Not configured: skip silently
 
         $order   = wc_get_order($order_id);
         $phone   = $order->get_billing_phone();

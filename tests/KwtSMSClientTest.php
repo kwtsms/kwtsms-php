@@ -136,7 +136,7 @@ class KwtSMSClientTest extends TestCase
 
     public function testSendEmojiOnlyMessageReturnsErr009WithCleaningDescription(): void
     {
-        // Emoji-only message becomes empty after clean_message() — ERR009 fires locally,
+        // Emoji-only message becomes empty after clean_message(): ERR009 fires locally,
         // no API call made, and description explains WHY it is empty.
         $result = $this->client->send($this->kwtTestNumber(), '😀🔥');
 
@@ -155,7 +155,7 @@ class KwtSMSClientTest extends TestCase
         $this->assertSame('ERROR', $result['result']);
         $this->assertSame('ERR009', $result['code']);
         $this->assertStringContainsString('cleaning', (string) ($result['description'] ?? ''));
-        // The bulk path must never be reached — zero API calls
+        // The bulk path must never be reached: zero API calls
         $this->assertEmpty($this->client->calls);
     }
 

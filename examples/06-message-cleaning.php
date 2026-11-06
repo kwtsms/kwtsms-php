@@ -7,10 +7,10 @@
  *
  * Why this matters:
  *   Messages with emojis, hidden Unicode characters, or HTML tags get stuck
- *   in the kwtSMS queue and are never delivered — but credits ARE consumed.
+ *   in the kwtSMS queue and are never delivered: but credits ARE consumed.
  *   The clean_message() function prevents this silently on every send() call.
  *
- * You don't need to call this manually — send() does it for you.
+ * You don't need to call this manually: send() does it for you.
  * This example is for educational purposes and manual pre-flight checks.
  *
  * Run:
@@ -31,7 +31,7 @@ $examples = [
     '<b>Important:</b> Your account is <i>active</i>.' => 'Important: Your account is active.',
     '<p>Click <a href="#">here</a> to confirm.</p>' => 'Click here to confirm.',
 
-    // Arabic/Persian digits — converted to Latin
+    // Arabic/Persian digits: converted to Latin
     'رصيدك: ٢٥٠ دينار' => 'رصيدك: 250 دينار',
     'كود التحقق: ١٢٣٤٥٦' => 'كود التحقق: 123456',
 

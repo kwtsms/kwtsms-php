@@ -22,7 +22,7 @@ cp .env.example .env
 ```
 
 ```ini
-KWTSMS_USERNAME=php_username   # API user — NOT your phone number or website login
+KWTSMS_USERNAME=php_username   # API user: NOT your phone number or website login
 KWTSMS_PASSWORD=php_password
 KWTSMS_SENDER_ID=KWT-SMS            # Replace with a private Sender ID before production
 KWTSMS_TEST_MODE=1                  # Set to 0 when ready to deliver real messages
@@ -61,7 +61,7 @@ Expected output: `Connected! Balance: X credits`
 
 - [Phone number formats](docs/reference.md#phone-number-format-reference): accepted, normalized, and rejected inputs
 - [Sender ID guide](docs/reference.md#sender-id): Promotional vs Transactional, DND, registration
-- [Error codes ERR001–ERR033](docs/reference.md#error-code-reference): descriptions and recommended actions
+- [Error codes ERR001-ERR033](docs/reference.md#error-code-reference): descriptions and recommended actions
 - [Pre-launch checklist](docs/reference.md#pre-launch-checklist): credentials, security, content, anti-abuse
 
 ---
