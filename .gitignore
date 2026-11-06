@@ -27,5 +27,4 @@ CLAUDE.md
 # Internal docs and planning (local only)
 /docs/
 
-# Tests (local only)
-/tests/
+# 2026-11-07 02:07 +03: tests are tracked now so CI runs them (Boss 01:59, q-track-tests); live tests skip without credentials.
