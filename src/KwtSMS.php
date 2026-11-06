@@ -30,7 +30,7 @@ class KwtSMS
      * 2026-11-05 14:10 +03: added so kwtSMS can count accounts per integration (int-measure-signups, #939).
      * @var string
      */
-    public const VERSION = '1.8.0';
+    public const VERSION = '1.8.1';
 
     /** @var string User-Agent sent on every API call (2026-11-05 14:10 +03, #939) */
     private $user_agent;
@@ -116,7 +116,7 @@ class KwtSMS
                             }
                         }
 
-                        // Strip embedded newlines — prevents env-injection if this
+                        // Strip embedded newlines - prevents env-injection if this
                         // value is later written to a .env file or passed to putenv().
                         $val = str_replace(["\r", "\n"], '', $val);
 
@@ -641,7 +641,7 @@ class KwtSMS
      *
      * Returns 'status' and 'description' on OK.
      * ERR029: message ID not found.
-     * ERR030: message stuck in queue — delete at kwtsms.com → Queue to recover credits.
+     * ERR030: message stuck in queue - delete at kwtsms.com → Queue to recover credits.
      *
      * @param string $msgId  The msg-id returned by send().
      * @return array<string, mixed>
@@ -657,7 +657,7 @@ class KwtSMS
      * Only available for international (non-Kuwait) numbers.
      * Wait at least 5 minutes after send before calling.
      * Returns 'report' array of {Number, Status} entries on OK.
-     * ERR019–ERR023 cover the various DLR failure cases.
+     * ERR019-ERR023 cover the various DLR failure cases.
      *
      * @param string $msgId  The msg-id returned by send().
      * @return array<string, mixed>

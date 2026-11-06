@@ -61,16 +61,16 @@ class MessageUtils
         // /u = utf-8 execution
         //
         // Ranges covered:
-        // 0x1F000–0x1FAFF  Full emoji supplementary range (extended from 0x1F300):
-        //   0x1F000–0x1F02F  Mahjong tiles (e.g. 🀄)
-        //   0x1F030–0x1F09F  Domino tiles
-        //   0x1F0A0–0x1F0FF  Playing cards
-        //   0x1F1E0–0x1F1FF  Regional Indicator Symbols — country flag pairs (e.g. 🇺🇸)
-        //   0x1F300–0x1FAFF  Emoticons, symbols, pictographs (previously sole range)
+        // 0x1F000-0x1FAFF  Full emoji supplementary range (extended from 0x1F300):
+        //   0x1F000-0x1F02F  Mahjong tiles (e.g. 🀄)
+        //   0x1F030-0x1F09F  Domino tiles
+        //   0x1F0A0-0x1F0FF  Playing cards
+        //   0x1F1E0-0x1F1FF  Regional Indicator Symbols - country flag pairs (e.g. 🇺🇸)
+        //   0x1F300-0x1FAFF  Emoticons, symbols, pictographs (previously sole range)
         // 0x20E3            Combining Enclosing Keycap (used in 1️⃣, 2️⃣, etc.)
-        // 0x2600–0x27BF     Miscellaneous symbols, dingbats
-        // 0xFE00–0xFE0F     Variation selectors (emoji/text presentation)
-        // 0xE0000–0xE007F   Tags block (used in subdivision flag sequences, e.g. 🏴󠁧󠁢󠁳󠁣󠁴󠁿)
+        // 0x2600-0x27BF     Miscellaneous symbols, dingbats
+        // 0xFE00-0xFE0F     Variation selectors (emoji/text presentation)
+        // 0xE0000-0xE007F   Tags block (used in subdivision flag sequences, e.g. 🏴󠁧󠁢󠁳󠁣󠁴󠁿)
         $text = preg_replace(
             '/[\x{1F000}-\x{1FAFF}\x{20E3}\x{E0000}-\x{E007F}\x{2600}-\x{27BF}\x{FE00}-\x{FE0F}]/u',
             '',

@@ -7,3 +7,5 @@
 /.gitignore export-ignore
 /.gitattributes export-ignore
 /.env.example export-ignore
+# 2026-11-06 11:14 +03: examples stay in the repo but out of the dist zip (vendor copies in plugins), release 1.8.1
+/examples export-ignore

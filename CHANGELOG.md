@@ -11,6 +11,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [1.8.1] 2026-11-06
+
+### Changed
+
+- The Packagist download now contains only the library (src/, README, CHANGELOG, LICENSE, composer.json): tests, examples, CI and editor files are left out, so plugins that bundle it stay small.
+- Plain ASCII hyphens instead of en and em dashes in comments and docs.
+
+---
+
 ## [1.8.0] 2026-11-05
 
 ### Added
@@ -122,9 +131,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 - `MessageUtils::clean_message()`: extended emoji stripping to cover country flags
-  (Regional Indicator Symbols U+1F1E0–U+1F1FF), mahjong tiles (U+1F000–U+1F02F),
+  (Regional Indicator Symbols U+1F1E0-U+1F1FF), mahjong tiles (U+1F000-U+1F02F),
   domino tiles, playing cards, keycap combiner (U+20E3, used in 1️⃣ 2️⃣ etc.),
-  and the tags block (U+E0000–U+E007F, used in subdivision flags such as 🏴󠁧󠁢󠁳󠁣󠁴󠁿).
+  and the tags block (U+E0000-U+E007F, used in subdivision flags such as 🏴󠁧󠁢󠁳󠁣󠁴󠁿).
 - `KwtSMS::send()`: ERR009 is now returned locally before any API call when the
   message is empty or becomes empty after cleaning (emoji-only or HTML-only input).
   The error description distinguishes the two cases with an actionable message.

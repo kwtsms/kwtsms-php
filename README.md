@@ -285,7 +285,7 @@ if ($result['result'] === 'OK') {
     echo $result['description']; // e.g. "Message successfully sent to gateway"
 } else {
     // ERR029: msg-id not found
-    // ERR030: stuck in queue — delete at kwtsms.com → Queue to recover credits
+    // ERR030: stuck in queue - delete at kwtsms.com → Queue to recover credits
     echo $result['action'];
 }
 ```
@@ -333,7 +333,7 @@ Validation steps (in order):
 3. Arabic/Hindi digit conversion + non-digit stripping
 4. Leading zero stripping
 5. Local trunk digit `0` stripped when country code is matched (e.g. `966 055...` → `966 55...`)
-6. Length check: 7–15 digits
+6. Length check: 7-15 digits
 7. Country-specific format check: local digit count and mobile starting digit (60+ countries via `PHONE_RULES`). Unknown country codes pass with length-only validation.
 
 ### `PhoneUtils::find_country_code()` / `PhoneUtils::validate_phone_format()`
@@ -372,7 +372,7 @@ What it strips and why:
 | 1 | HTML tags | Prevents ERR027 |
 | 2 | Arabic/Hindi digits converted to Latin | OTP codes render consistently on all handsets |
 | 3 | Hidden Unicode (U+200B zero-width space, U+FEFF BOM, U+00AD soft hyphen, etc.) | Common in copy-pasted text from Word/PDFs; causes spam filter rejection |
-| 4 | Emojis: standard, country flags (U+1F1E0–U+1F1FF), mahjong tiles (U+1F000), keycap combiner (U+20E3), tags block (U+E0000–E007F) | Messages with emojis queue indefinitely with no error returned |
+| 4 | Emojis: standard, country flags (U+1F1E0-U+1F1FF), mahjong tiles (U+1F000), keycap combiner (U+20E3), tags block (U+E0000-E007F) | Messages with emojis queue indefinitely with no error returned |
 | 5 | Other control characters | Prevents encoding issues |
 
 Newlines (`\n`, `\r`), tabs (`\t`), Arabic text, and Latin punctuation are preserved.
@@ -475,8 +475,8 @@ BEFORE GOING LIVE:
 [ ] Transactional Sender ID for OTP (not promotional)
 [ ] Test mode OFF (KWTSMS_TEST_MODE=0)
 [ ] CAPTCHA on all SMS-triggering forms
-[ ] Rate limit per phone number (max 3–5 per hour)
-[ ] Rate limit per IP address (max 10–20 per hour)
+[ ] Rate limit per phone number (max 3-5 per hour)
+[ ] Rate limit per IP address (max 10-20 per hour)
 [ ] OTP codes stored as HMAC hash, not plaintext
 [ ] Admin alert on low balance
 [ ] .env in .gitignore; credentials never committed
