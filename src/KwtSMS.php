@@ -206,7 +206,10 @@ class KwtSMS
             'Accept: application/json',
         ]);
         // 2026-11-05 14:10 +03: 'kwtsms-php/<version>', prefixed by the app token when given (#939).
-        curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
+        // 2026-11-08 12:08 +03: only when non-empty (curl needs a non-empty string; phpstan 2 level 8), php-pr15-phpstan2
+        if ($this->user_agent !== '') {
+            curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
+        }
 
         // Critical: Do NOT use CURLOPT_FAILONERROR because we *need* the 4xx/5xx body for API errors!
 
