@@ -15,179 +15,92 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
-- The Packagist download now contains only the library (src/, README, CHANGELOG, LICENSE, composer.json): tests, examples, CI and editor files are left out, so plugins that bundle it stay small.
-- Plain ASCII hyphens instead of en and em dashes in comments and docs.
+- Smaller Packagist download: library files only.
 
 ---
 
 ## [1.8.0] 2026-11-05
 
 ### Added
-- The client sends a User-Agent `kwtsms-php/<version>` (name and version only, no personal data) so kwtSMS can see which integrations are in use. An optional `$app_name` constructor argument puts your app's token in front, e.g. `kwtsms-wordpress/3.5.2 kwtsms-php/1.8.0`. New `KwtSMS::VERSION` constant.
+- Client identifies itself with its name and version; optional `$app_name` constructor argument.
 
 ### Changed
 - Package author and license holder are now kwtSMS.
-- ERR006 and ERR025 action text, the README, examples and docs use the placeholder `965XXXXXXXX` instead of a sample mobile number; tests read the phone number from `KWTSMS_TEST_NUMBER` and skip the tests that need it when it is unset.
-
-### Fixed
-- A failed JSON encode of a log entry no longer writes a blank line to the log file.
-
-### Docs
-- Test mode: test messages are queued but not delivered. Their credits are held until you delete them from the Sending Queue in your kwtsms.com account (previously documented as "no credits consumed").
-- ERR028 description and action no longer state a fixed 15-second wait. Duplicate SMS protection is opt-in per account and its window is set per account (10 seconds by default). The error-handling example now waits 10 seconds instead of 15.
+- Bug fixes.
 
 ---
 
 ## [1.7.0] 2026-03-18
 
 ### Changed
-- Packagist package renamed from `kwtsms/kwtsms` to `kwtsms/kwtsms-php` for consistency with the 12-language SDK naming convention (`kwtsms-php`, `kwtsms-js`, `kwtsms-python`, etc.).
-  Existing installs using `kwtsms/kwtsms` should update their `composer.json`. The PHP namespace (`KwtSMS\`) is unchanged.
+- Packagist package renamed from `kwtsms/kwtsms` to `kwtsms/kwtsms-php`. Update your `composer.json`; the PHP namespace (`KwtSMS\`) is unchanged.
 
 ---
 
 ## [1.6.0] 2026-03-17
 
 ### Added
-- `send()` now returns ERR003 immediately if `username` or `password` is empty, without making an API call.
+- Early credential check in `send()`.
 
-### Fixed
-- ERR012 description corrected to "over 7 SMS pages" (was "over 6"). Confirmed via live API: 7-page messages (1071 GSM / 469 UCS-2 chars) succeed; 8-page messages fail.
+### Changed
+- Bug fixes.
 
 ---
 
 ## [1.5.0] 2026-03-13
 
-### Fixed
-- `KWTSMS_TEST_MODE=false` in `.env` or env no longer silently enables test mode.
-  The old `(bool)'false' === true` coercion is replaced by an explicit allowlist
-  (`1`, `true`, `yes`, case-insensitive).
-- `KWTSMS_LOG_FILE=` (empty string) in `from_env()` now correctly disables logging
-  as documented. Previously the `?:` fallback defaulted to `kwtsms.log`.
-- `MessageUtils::clean_message()` now strips invalid UTF-8 byte sequences before
-  applying `/u` regex patterns. Previously malformed UTF-8 silently fell through
-  and caused `json_encode` to return `ERR999` at send time.
-
 ### Changed
-- `send_bulk()` calls `set_time_limit(0)` at entry. Bulk sends with ERR013 backoff
-  can exceed PHP's default 30-second execution limit mid-batch.
+- Bug fixes.
 
 ---
 
 ## [1.4.0] 2026-03-13
 
 ### Removed
-- `bin/kwtsms` CLI tool extracted to [kwtsms-cli](https://github.com/boxlinknet/kwtsms-cli).
-  Remove the `"bin"` entry from `composer.json`; `vendor/bin/kwtsms` is no longer installed.
+- `bin/kwtsms` CLI tool, now [kwtsms-cli](https://github.com/boxlinknet/kwtsms-cli). Remove the `"bin"` entry from `composer.json`.
 
 ---
 
 ## [1.3.0] 2026-03-13
 
 ### Added
-- `PhoneUtils::PHONE_RULES`: country-specific validation rules for 60+ countries
-  (local digit length and mobile starting digit). Ported from kwtsms-shopify.
-- `PhoneUtils::find_country_code()`: longest-match (3 > 2 > 1 digit) country code
-  lookup against `PHONE_RULES`.
-- `PhoneUtils::validate_phone_format()`: validates local digit count and mobile
-  prefix against country rules. Unknown country codes pass through with generic
-  E.164 length-only validation.
-- `PhoneUtils::COUNTRY_NAMES`: human-readable names used in error messages.
-- Trunk digit stripping in `validate_phone_input()`: local `0` prefix is removed
-  after country code match (e.g. `966 055 123 4567` → `966551234567`).
+- Country-specific phone validation (60+ countries).
+- Trunk prefix handling.
 
 ---
 
 ## [1.2.0] 2026-03-05
 
 ### Added
-- `KwtSMS::status(string $msgId)`: check the queue/dispatch status of a sent message.
-  Returns `status` and `description` on OK. Handles ERR029 (not found) and ERR030
-  (stuck in queue with credits recoverable from dashboard).
-- `KwtSMS::dlr(string $msgId)`: retrieve delivery reports for international sends.
-  Returns a `report` array of `{Number, Status}` entries. Only available for
-  non-Kuwait numbers; wait at least 5 minutes after send before calling.
-- GitHub Actions CI: automated test matrix across PHP 7.4, 8.1, 8.2, and 8.3
-  on every push and pull request.
-- `SECURITY.md`: private vulnerability reporting policy via GitHub Security Advisories.
-- README badges: Packagist version, total downloads, PHP version, license, CI status.
-
-### Changed
-- Test count: 63 → 71 tests, 220 → 246 assertions.
+- `status()` and `dlr()` methods.
+- CI, security policy and README badges.
 
 ---
 
 ## [1.1.0] 2026-03-05
 
 ### Added
-- `examples/09-otp-production.php`: complete drop-in production OTP implementation
-  with three storage adapters (SQLite, MySQL, Redis), two CAPTCHA providers
-  (Cloudflare Turnstile, hCaptcha), per-phone and per-IP rate limiting,
-  HMAC-SHA256 code hashing, brute-force protection (attempt increment before
-  comparison), replay protection via `markUsed()`, and IP spoofing guard.
-- `examples/docs/`: per-example documentation files linked from a restructured
-  `examples/README.md` index; shared reference doc covering phone formats, Sender
-  ID types, error code table, and pre-launch checklist.
+- Production OTP example and per-example guides.
 
 ### Changed
-- `MessageUtils::clean_message()`: extended emoji stripping to cover country flags
-  (Regional Indicator Symbols U+1F1E0-U+1F1FF), mahjong tiles (U+1F000-U+1F02F),
-  domino tiles, playing cards, keycap combiner (U+20E3, used in 1️⃣ 2️⃣ etc.),
-  and the tags block (U+E0000-U+E007F, used in subdivision flags such as 🏴󠁧󠁢󠁳󠁣󠁴󠁿).
-- `KwtSMS::send()`: ERR009 is now returned locally before any API call when the
-  message is empty or becomes empty after cleaning (emoji-only or HTML-only input).
-  The error description distinguishes the two cases with an actionable message.
-  No credits are consumed and no network request is made.
-- Security fix.
-- `composer.lock` removed from version control. Library convention: consumers
-  use their own lock files and Composer ignores the library lock file on install.
-- `.gitignore`: added OS files (`Thumbs.db`, `Desktop.ini`), editor swap files
-  (`*.swp`, `*.swo`), local config dir, and `/.github/`.
+- Wider emoji cleaning.
+- Messages with no usable text are caught before any API call.
+- Maintenance.
 
 ---
 
 ## [1.0.0] 2026-03-05
 
 ### Added
-- `KwtSMS` main client class: zero external dependencies, `ext-curl` and `ext-json` only.
-- `KwtSMS::from_env()`: load credentials from environment variables or `.env` file;
-  supports quoted values, inline comments, and precedence over system env vars.
-- `KwtSMS::verify()`: test credentials and retrieve current balance.
-- `KwtSMS::balance()`: fetch current credit balance.
-- `KwtSMS::purchased()`: return total credits purchased, cached from last balance call.
-- `KwtSMS::send()`: send SMS to one or more recipients with automatic:
-  - Phone number normalization (strips `+`, `00`, spaces, dashes; converts Arabic/Hindi digits)
-  - Deduplication (same normalized number charged and dispatched only once)
-  - Message cleaning via `MessageUtils::clean_message()`
-  - Batch splitting for >200 numbers (200/batch, 0.5s inter-batch delay)
-  - ERR013 (queue full) retry with exponential backoff: 30s, 60s, 120s, max 4 attempts
-- `KwtSMS::validate()`: local batch phone validation using `PhoneUtils`; no API call.
-- `KwtSMS::senderids()`: list Sender IDs registered on the account.
-- `KwtSMS::coverage()`: list active country coverage prefixes.
-- `PhoneUtils::normalize_phone()`: normalize a phone number string.
-- `PhoneUtils::validate_phone_input()`: validate a phone number with detailed error messages.
-- `PhoneUtils::DIGITS_MAP`: public constant mapping Arabic-Indic and Extended Arabic-Indic
-  digits to Latin; shared with `MessageUtils`.
-- `MessageUtils::clean_message()`: strip HTML, emojis, hidden Unicode control characters,
-  and convert Arabic/Hindi digits to Latin.
-- `ApiErrors::ERRORS`: all 33 kwtSMS error codes mapped to developer descriptions and actions.
-- `ApiErrors::enrichError()`: enriches any API response with the `action` field.
-- NDJSON request logging with automatic password masking; path traversal guard on log path;
-  logging never throws (failures silently ignored).
-- PHP 7.4+ compatibility.
-- PSR-4 autoloading under the `KwtSMS\` namespace.
-- PHPUnit test suite: 63 tests, 220 assertions across four test files.
-  - `PhoneUtilsTest.php`: unit tests for phone normalization and validation.
-  - `MessageUtilsTest.php`: unit tests for message cleaning (including emoji ranges).
-  - `ApiErrorsTest.php`: mocked API tests for all error code mappings.
-  - `KwtSMSClientTest.php`: mocked API tests for send, validate, bulk, verify flows.
-- `IntegrationTest.php`: live API tests (auto-skipped without credentials).
-- `phpstan/phpstan`: static analysis.
-- `friendsofphp/php-cs-fixer`: PSR-12 code style enforcement.
-- MIT License.
-- `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `.env.example`.
-- 9 examples covering: quickstart, OTP, bulk SMS, validation, error handling,
-  message cleaning, Laravel integration, WordPress integration, production OTP flow.
+- Initial release.
+- Full API coverage: send, verify, balance, validate, sender IDs, coverage.
+- Credentials from environment or `.env` file.
+- Phone normalization, deduplication and message cleaning.
+- Auto-batching for bulk sends and retry when the queue is full.
+- All kwtSMS error codes mapped to action messages.
+- Request logging with password masking.
+- PHP 7.4+, no external dependencies.
+- Test suite, examples and MIT License.
 
 ---
 
@@ -196,8 +109,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 | Version | Date | PHP | Notable Change |
 |---------|------|-----|----------------|
 | 1.7.0 | 2026-03-18 | 7.4+ | Packagist rename: kwtsms/kwtsms to kwtsms/kwtsms-php |
-| 1.6.0 | 2026-03-17 | 7.4+ | Early credential check in send(), ERR012 page-limit correction |
-| 1.5.0 | 2026-03-13 | 7.4+ | Security fix. |
+| 1.6.0 | 2026-03-17 | 7.4+ | Early credential check in send() |
+| 1.5.0 | 2026-03-13 | 7.4+ | Bug fixes. |
 | 1.4.0 | 2026-03-13 | 7.4+ | CLI tool moved to kwtsms-cli |
 | 1.3.0 | 2026-03-13 | 7.4+ | Country-specific phone validation (60+ countries), trunk-zero stripping |
 | 1.2.0 | 2026-03-05 | 7.4+ | status(), dlr(), CI, badges, SECURITY.md |
