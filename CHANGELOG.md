@@ -138,11 +138,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   message is empty or becomes empty after cleaning (emoji-only or HTML-only input).
   The error description distinguishes the two cases with an actionable message.
   No credits are consumed and no network request is made.
-- `KwtSMS::__construct()`: embedded newlines (`\r`, `\n`) are stripped from
-  `$username` and `$password` to prevent env-injection if credentials are ever
-  written back to a `.env` file or a log entry.
-- `KwtSMS::from_env()`: embedded newlines are also stripped from all values
-  parsed from the `.env` file (belt-and-suspenders for file-based parsing).
+- Security fix.
 - `composer.lock` removed from version control. Library convention: consumers
   use their own lock files and Composer ignores the library lock file on install.
 - `.gitignore`: added OS files (`Thumbs.db`, `Desktop.ini`), editor swap files
@@ -201,7 +197,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 |---------|------|-----|----------------|
 | 1.7.0 | 2026-03-18 | 7.4+ | Packagist rename: kwtsms/kwtsms to kwtsms/kwtsms-php |
 | 1.6.0 | 2026-03-17 | 7.4+ | Early credential check in send(), ERR012 page-limit correction |
-| 1.5.0 | 2026-03-13 | 7.4+ | Security fixes: TEST_MODE coercion, LOG_FILE empty-disable, UTF-8 sanitization, set_time_limit(0) |
+| 1.5.0 | 2026-03-13 | 7.4+ | Security fix. |
 | 1.4.0 | 2026-03-13 | 7.4+ | CLI tool moved to kwtsms-cli |
 | 1.3.0 | 2026-03-13 | 7.4+ | Country-specific phone validation (60+ countries), trunk-zero stripping |
 | 1.2.0 | 2026-03-05 | 7.4+ | status(), dlr(), CI, badges, SECURITY.md |
