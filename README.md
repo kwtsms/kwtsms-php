@@ -514,10 +514,16 @@ kwtsms.com → Account → API.
 
 **Can I send to international numbers?**
 
-International sending is disabled by default. Contact kwtSMS support to activate
-specific country prefixes. Use `coverage()` to see which are currently active.
-Note: enabling international coverage increases bot/abuse exposure. Implement
-rate limiting and CAPTCHA before enabling.
+Yes, but international sending is off by default. To turn a country on, log in to your kwtSMS account, go to Coverage, click Add, choose the country and fill in the form. Requests are usually reviewed the same day. API error ERR026 means the country is not active on your account yet: contact support to add it.
+
+Rules in short:
+- Transactional messages only (OTP, payment links). No bulk or promotional messages.
+- The Sender ID abroad is KWT-SMS. You can register your own Sender ID in a country only if you hold an active business license in that country (same name as in Kuwait).
+- Many networks abroad filter messages with links, and the credits are still deducted.
+- International traffic has limits (share of your traffic, warnings and a daily maximum). International coverage also raises your exposure to bot abuse, so protect your OTP and sign-up forms (CAPTCHA, rate limits).
+- Credits: today every SMS part uses 1 credit, to any country.
+
+Current rules, limits and credits per country: https://www.kwtsms.com/faq/send-international-sms-messages.html
 
 ---
 
