@@ -1,3 +1,8 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/readme-header-dark.png">
+  <img alt="kwtSMS for PHP: SMS and OTP through kwtSMS" src=".github/assets/readme-header-light.png">
+</picture>
+
 # kwtSMS PHP Client
 
 [![Latest Version](https://img.shields.io/packagist/v/kwtsms/kwtsms.svg?style=flat-square)](https://packagist.org/packages/kwtsms/kwtsms)
